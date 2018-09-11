@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import styles from './form.css';
 
 export default class Form extends Component {
   static propTypes = {
@@ -28,17 +29,18 @@ export default class Form extends Component {
   render() {
     const { text } = this.state;
     return (
-      <form onSubmit={e => this.handleSubmit(e)}>
-        <label htmlFor="code">
-          City:
+      <form onSubmit={e => this.handleSubmit(e)} className={styles.form}>
+        <label htmlFor="code" className={styles.label}>
+          <span className={styles.text}>City code:</span>
           <input
+            className={styles.field}
             id="code"
             type="text"
             value={text}
             onChange={e => this.handleChange(e)}
           />
         </label>
-        <input type="submit" value="Submit" />
+        <input className={styles.button} type="submit" value="Submit" />
       </form>
     );
   }

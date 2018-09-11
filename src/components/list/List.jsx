@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styles from './list.css';
 
 const List = ({ cities }) => (
-  <ul>
+  <ul className={styles.list}>
     {cities.map(city => (
-      <li key={city.code}>
+      <li key={city.code} className={styles.item}>
         {city.name}
 ,
         {city.state}

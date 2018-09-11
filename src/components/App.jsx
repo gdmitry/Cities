@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Actions from '../actions/creators';
-import Form from './Form';
-import List from './List';
-import Spinner from './Spinner';
+import Form from './form/Form';
+import List from './list/List';
+import Spinner from './spinner/Spinner';
 import styles from './app.css';
 
 const App = (props) => {
@@ -20,7 +20,7 @@ const App = (props) => {
     <div className={styles.container}>
       <Form onSubmit={code => fetchCity(code)} />
       <List cities={cities} />
-      {error && <div>{error}</div>}
+      {error && <div className={styles.error}>{error}</div>}
     </div>
   );
 };
