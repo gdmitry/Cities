@@ -5,6 +5,11 @@ import styles from './form.css';
 export default class Form extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
+    value: PropTypes.string,
+  };
+
+  static defaultProps = {
+    value: '',
   };
 
   constructor(props) {
@@ -12,6 +17,13 @@ export default class Form extends Component {
     this.state = {
       text: '',
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { text } = this.state;
+    if (nextProps.value !== text) {
+      this.setState({ text: nextProps.value });
+    }
   }
 
   handleChange(e) {
