@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export default class Form extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -18,19 +18,23 @@ export default class Form extends Component {
   }
 
   handleSubmit(e) {
+    const { text } = this.state;
+    const { onSubmit } = this.props;
     e.preventDefault();
-    this.props.onSubmit(this.state.text);
+    onSubmit(text);
     this.setState({ text: '' });
   }
 
   render() {
+    const { text } = this.state;
     return (
       <form onSubmit={e => this.handleSubmit(e)}>
-        <label>
+        <label htmlFor="code">
           City:
           <input
+            id="code"
             type="text"
-            value={this.state.text}
+            value={text}
             onChange={e => this.handleChange(e)}
           />
         </label>

@@ -1,24 +1,40 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as Actions from '../actions/creators';
+import Actions from '../actions/creators';
 import Form from './Form';
 import List from './List';
+import Spinner from './Spinner';
+import styles from './app.css';
 
-class App extends Component {
-  static propTypes = {
+const App = (props) => {
+  const {
+    cities, fetchCity, loading, error,
+  } = props;
+
+  if (loading) {
+    return <div className={styles.container}><Spinner /></div>;
   }
 
-  render() {
-    return (
-      <div>
-        <Form onSubmit={code => this.props.fetchCity(code)} />
-        <List cities={this.props.cities} />
-      </div>
-    );
-  }
-}
+  return (
+    <div className={styles.container}>
+      <Form onSubmit={code => fetchCity(code)} />
+      <List cities={cities} />
+      {error && <div>{error}</div>}
+    </div>
+  );
+};
+
+App.propTypes = {
+  cities: PropTypes.arrayOf(PropTypes.shape({
+    code: PropTypes.string,
+    name: PropTypes.string,
+    state: PropTypes.string,
+  })).isRequired,
+  fetchCity: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  error: PropTypes.string.isRequired,
+};
 
 function mapStateToProps(state) {
   return {
@@ -29,7 +45,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Actions, dispatch);
+  return {
+    fetchCity: code => dispatch(Actions.fetchCity(code)),
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
