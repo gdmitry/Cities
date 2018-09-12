@@ -5,6 +5,7 @@ import styles from './form.css';
 export default class Form extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
     value: PropTypes.string,
   };
 
@@ -27,15 +28,18 @@ export default class Form extends Component {
   }
 
   handleChange(e) {
-    this.setState({ text: e.target.value });
+    const { onChange } = this.props;
+    const text = e.target.value;
+    this.setState({ text });
+    onChange(text);
   }
 
   handleSubmit(e) {
     const { text } = this.state;
     const { onSubmit } = this.props;
     e.preventDefault();
-    onSubmit(text);
     this.setState({ text: '' });
+    onSubmit(text);
   }
 
   render() {

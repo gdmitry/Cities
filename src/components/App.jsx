@@ -8,42 +8,62 @@ import Spinner from './spinner/Spinner';
 import styles from './app.css';
 
 class App extends Component {
-static propTypes = {
-  cities: PropTypes.arrayOf(PropTypes.shape({
-    code: PropTypes.string,
-    name: PropTypes.string,
-    state: PropTypes.string,
-  })).isRequired,
-  fetchCity: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
-  error: PropTypes.string.isRequired,
-};
-
-constructor(props) {
-  super(props);
-  this.state = {
-    selectedCity: '',
+  static propTypes = {
+    cities: PropTypes.arrayOf(PropTypes.shape({
+      code: PropTypes.string,
+      name: PropTypes.string,
+      state: PropTypes.string,
+    })).isRequired,
+    fetchCity: PropTypes.func.isRequired,
+    updateCity: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.string.isRequired,
   };
-}
 
-render() {
-  const {
-    cities, fetchCity, loading, error,
-  } = this.props;
-
-  const { selectedCity } = this.state;
-  if (loading) {
-    return <div className={styles.container}><Spinner /></div>;
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedCity: '',
+      cityToUpdate: '',
+    };
   }
 
-  return (
-    <div className={styles.container}>
-      <Form onSubmit={code => fetchCity(code)} value={selectedCity} />
-      <List cities={cities} onSelect={cityCode => this.setState({ selectedCity: cityCode })} />
-      {error && <div className={styles.error}>{error}</div>}
-    </div>
-  );
-}
+  onSubmit(code) {
+    const { fetchCity, updateCity } = this.props;
+    const { selectedCity, cityToUpdate } = this.state;
+    if (selectedCity && cityToUpdate && (selectedCity !== cityToUpdate)) {
+      updateCity(selectedCity, cityToUpdate);
+    } else {
+      fetchCity(code);
+    }
+    this.setState({
+      selectedCity: '',
+      cityToUpdate: '',
+    });
+  }
+
+  render() {
+    const {
+      cities, loading, error,
+    } = this.props;
+
+    const { selectedCity, cityToUpdate } = this.state;
+    if (loading) {
+      return <div className={styles.container}><Spinner /></div>;
+    }
+
+    return (
+      <div className={styles.container}>
+        <Form
+          onChange={code => this.setState({ cityToUpdate: code })}
+          onSubmit={code => this.onSubmit(code)}
+          value={selectedCity || cityToUpdate}
+        />
+        <List cities={cities} onSelect={cityCode => this.setState({ selectedCity: cityCode })} />
+        {error && <div className={styles.error}>{error}</div>}
+      </div>
+    );
+  }
 }
 
 function mapStateToProps(state) {
@@ -57,6 +77,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchCity: code => dispatch(Actions.fetchCity(code)),
+    updateCity: (codeToUpdate, codeToFetch) => dispatch(Actions.updateCity(codeToUpdate, codeToFetch)),
   };
 }
 

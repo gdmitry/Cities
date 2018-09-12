@@ -4,5 +4,8 @@
     "browser": true
   },
   "parser": "babel-eslint",
-  "extends": "airbnb"
+  "extends": "airbnb",
+  "rules": {
+    "max-len": ["error", { "code": 120 }]
+  }
 }
