@@ -46,11 +46,7 @@ class App extends Component {
     const {
       cities, loading, error,
     } = this.props;
-
     const { selectedCity, cityToUpdate } = this.state;
-    if (loading) {
-      return <div className={styles.container}><Spinner /></div>;
-    }
 
     return (
       <div className={styles.container}>
@@ -59,7 +55,8 @@ class App extends Component {
           onSubmit={code => this.onSubmit(code)}
           value={selectedCity || cityToUpdate}
         />
-        <List cities={cities} onSelect={cityCode => this.setState({ selectedCity: cityCode })} />
+        {!loading && <List cities={cities} onSelect={cityCode => this.setState({ selectedCity: cityCode })} />}
+        {loading && <Spinner />}
         {error && <div className={styles.error}>{error}</div>}
       </div>
     );
